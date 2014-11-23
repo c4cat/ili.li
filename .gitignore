@@ -1,0 +1,7 @@
+#始终忽略
+
+#OSX系统下忽略
+.DS_Store
+
+#忽略以下文件夹
+node_modules/
