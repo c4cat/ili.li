@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <script type='text/javascript' src='static/js/kinetic.min.js'></script>
+    <script defer="defer">
+      var stage = new Kinetic.Stage({
+        container: 'container',
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+      var animLayer = new Kinetic.Layer();
+      var staticLayer = new Kinetic.Layer();
+
+      /*
+       * leave center point positioned
+       * at the default which is at the center
+       * of the hexagon
+       */
+      var blueHex = new Kinetic.RegularPolygon({
+        x: 100,
+        y: stage.height()/2,
+        sides: 6,
+        radius: 70,
+        fill: '#ccc',
+        stroke: 'black',
+        strokeWidth: 4,
+        draggable: true
+      });
+
+      var yellowHex = new Kinetic.RegularPolygon({
+        x: stage.width()/2,
+        y: stage.height()/2,
+        sides: 6,
+        radius: 70,
+        fill: 'yellow',
+        stroke: 'black',
+        strokeWidth: 4,
+        draggable: true
+      });
+
+      /*
+       * move center point to right side
+       * of hexagon
+       */
+      var redHex = new Kinetic.RegularPolygon({
+        x: 470,
+        y: stage.height()/2,
+        sides: 6,
+        radius: 70,
+        fill: 'red',
+        stroke: 'black',
+        strokeWidth: 4,
+        offset: {
+          x: 70,
+          y: 0
+        },
+        draggable: true
+      });
+      
+      var text = new Kinetic.Text({
+        x: 10,
+        y: 10,
+        text: 'Static Layer',
+        fontSize: '30',
+        fontFamily: 'Calibri',
+        fill: 'black'
+      });
+      
+      staticLayer.add(text);
+
+      animLayer.add(blueHex);
+      animLayer.add(yellowHex);
+      animLayer.add(redHex);
+      stage.add(animLayer).add(staticLayer);
+
+      var period = 2000;
+      var anim = new Kinetic.Animation(function(frame) {
+        var scale = Math.sin(frame.time * 2 * Math.PI / period) + 0.001;
+        // scale x and y
+        blueHex.scale({x:scale, y:scale});
+        // scale only x
+        yellowHex.scale({x:2, y:scale});
+        // scale only y
+        redHex.scale({x:scale, y: 2});
+      }, animLayer);
+
+      anim.start();
+    </script>
+  </body>
+</html>      
