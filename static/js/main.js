@@ -1,5 +1,6 @@
 // MRC
 // background
+// use div and css
 // ver 0.0.1
 // 2014-11-24 21:43:03
 
@@ -18,6 +19,8 @@ var stage = new Kinetic.Stage({
 
 var BgLayer = new Kinetic.Layer();
 
+// var bg = 
+
 for(var i=0;i<bg_row;i++){
     for(var j=0;j<bg_col;j++){
         var bgBox = new Kinetic.Rect({
@@ -28,13 +31,32 @@ for(var i=0;i<bg_row;i++){
             strokeWidth:1,
             cornerRadius:5,
             fill:'black',
-            stroke:'red'
+            opacity:0.2,
+            stroke:'#000'
         });
-        bgBox.on('click', function() {
-            console.log(this.x());
+        bgBox.on('mouseover', function() {
             this.opacity(0.5);
-            BgLayer.draw();
+            // var tween = new Kinetic.Tween({
+            //     node:this,
+            //     duration:0.2,
+            //     opacity:0.2,
+            //     easing: Kinetic.Easings.EaseInOut
+            // });
+            // tween.play();
         },true);
+        // bgBox.on('mouseout', function() {
+        //     // this.opacity(0.5);
+        //     var tween = new Kinetic.Tween({
+        //         node:this,
+        //         duration:1,
+        //         opacity:0.5
+        //     });
+        //     tween.play();
+        // },true);
+        // bgBox.on('mouseout', function() {
+        //     this.opacity(1);
+        //     BgLayer.draw();
+        // },true);
         BgLayer.add(bgBox);
     }
 }
