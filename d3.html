@@ -9,9 +9,19 @@
 
 </style>
 <body>
-	<div id="container">sorry</div>
+    <p>1</p>
 </body>
 	<script type='text/javascript' src='static/js/jquery.js'></script>
     <script type='text/javascript' src='static/js/d3.v3.js'></script>
-    <script></script>
+    <script>
+        var dataset = [5,10,15,20,25,30];
+      d3.select('body')
+        .selectAll('p')
+        .data(dataset)
+        .enter()
+        .append('div')
+        .text(function(a){
+            return a;
+        });
+    </script>
 </html>
