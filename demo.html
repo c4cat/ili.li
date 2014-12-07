@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>Index</title>
+	<title>Demo</title>
 	<link rel="stylesheet" href="static/css/less.css">
 </head>
 <style>
@@ -35,9 +35,9 @@ var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-svg.selectAll("circle")
+svg.selectAll("rect")
     .data(nodes.slice(1))
-  .enter().append("circle")
+  .enter().append("rect")
     .attr("r", function(d) { return d.radius; })
     .style("fill", function(d, i) { return color(i % 3); });
 
@@ -48,7 +48,7 @@ force.on("tick", function(e) {
 
   while (++i < n) q.visit(collide(nodes[i]));
 
-  svg.selectAll("circle")
+  svg.selectAll("rect")
       .attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; });
 });
