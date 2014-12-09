@@ -26,7 +26,6 @@ d3.select('body').append('svg')
     .attr('class','bg-box')
     .attr({'width':99,'height':99,'rx':5,'ry':5,'fill':'rgba(0,0,0,0.8)'})
     .attr('x',function(d,i){
-        console.log(d[0]);
         return d[0]*100;
     })
     .attr('y',function(d,i){
