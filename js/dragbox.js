@@ -66,7 +66,7 @@ function createAroundBox(num,edge,local){
 		floor = 3;
 
 		while(arr.length<num){
-			if(floor>999) break;
+			if(floor>999) break; //stop
 
 			var start = {
 				x: local.x-Math.floor(floor/2),
