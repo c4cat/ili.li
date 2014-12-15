@@ -76,6 +76,21 @@ while(dragBoxNum_count < 6){
 		dragBoxNum_count++;
 	}
 }
+var drag = d3.behavior.drag()
+			.origin(function(){ 
+		        var t = d3.select(this);
+		        return {x: t.attr("x"), y: t.attr("y")};
+		    })
+			.on("drag",function(d){
+				d3.select(this)
+			      .attr("x", d.x = Math.max(0, Math.min(width - 100, d3.event.x)))
+			      .attr("y", d.y = Math.max(0, Math.min(height - 100, d3.event.y)))
+			      .attr("id", "isdragging");
+			})
+			.on("dragend",function(d){
+		        var t = d3.select(this);
+				setTimeout(function(){t.attr("id","");},300);
+			});
 
 d3.select('svg').append('g')
 	.attr({'width':width,'height':height,'x':0,'y':0})
@@ -90,9 +105,11 @@ d3.select('svg').append('g')
     })
     .attr('y',function(d,i){
         return d[1]*100;
-    });
+    }).call(drag);
+
 
 d3.selectAll('.drag-box').on('click',function(){
+	if(d3.select(this).attr('id')=='isdragging') return false;
 	var local = {
 		x:d3.select(this).attr('x')/100,
 		y:d3.select(this).attr('y')/100

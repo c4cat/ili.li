@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>svg demo</title>
+</head>
+<body>
+<style type="text/css">
+body{
+    padding: 0;
+    margin: 0;
+}
+#view{
+    height:500px;
+    width:400px;
+    border:1px solid red;
+    position: relative;
+    left:100px;
+    top:100px;
+    overflow: hidden;
+}
+#list{
+    margin: 0;
+    -webkit-transition-timing-function:cubic-bezier(0.33, 0.66, 0.66, 1);
+    -webkit-transition-property: -webkit-transform;
+    -webkit-user-select: none;
+}
+#list li{
+    height:50px;
+    line-height:35px;
+}
+</style>
+<body>
+    <div id="view">
+        <ul id="list"></ul>
+    </div>
+</body>
+
+<script type="text/javascript">
+
+(function(){
+    var list = document.getElementById('list');
+    var view = document.getElementById('view');
+    var h = [];
+    var temp = new Array(5);
+    for(var i = 1; i <= 40; i++){
+        h.push("<li>" + temp.join(i) + "</li>");
+    }
+    list.innerHTML = h.join("");
+
+    var isDrag = false;
+    var startY = 0;
+    var listY = 0;
+    var drag_before_y = 0;
+    var drag_before_time = null;
+
+    var scroll_min = 0;
+    var scroll_max = list.clientHeight - view.clientHeight;
+    list.addEventListener('mousedown', function(e){
+        var transform = getComputedStyle(list)['webkitTransform']
+        var y = transform.replace(/[^\d-.,]/g, '').split(',')[5];
+        list.style.webkitTransitionDuration = '0ms';
+        list.style.webkitTransform = 'translateY(' + y + 'px)';
+
+        isDrag = true;
+        startY = e.pageY;
+        drag_before_y = listY = parseInt(y) || 0;
+        drag_before_time = new Date();
+
+    });
+    document.body.addEventListener('mousemove', function(e){
+        if(!isDrag){
+            return;
+        }  
+        var d = e.pageY - startY;
+        listY = drag_before_y + d;    
+        if(listY > 0){
+            listY = drag_before_y + d / 2;
+        }else if(listY < -scroll_max){
+            listY = drag_before_y + d / 2;    
+        }  
+        list.style.webkitTransform = 'translateY(' + listY + 'px)';
+    });
+    document.body.addEventListener('mouseup', function(e){
+        isDrag = false;
+        var duration = new Date() - drag_before_time;
+        var dist = listY - drag_before_y;
+        listY = doInertia(dist, duration, listY, list);
+    });
+
+    //执行惯性操作
+    function doInertia(dist, duration, currectY, elem){
+        var v = dist / duration;
+        if(Math.abs(v) > 0.2 && duration < 200 && currectY < 0 && currectY > -scroll_max){
+            // < 0 向下滑动，检查下边界, >0 向上滑动，检查上边界
+            var c = dist < 0 ? currectY + scroll_max : -currectY;
+            var maxDist = c + view.clientHeight / 6;
+            var param = momentum(dist, duration, maxDist);
+            elem.style.webkitTransitionDuration = param.time + 'ms';
+            var toY = currectY + param.dist;            
+            elem.style.webkitTransform = 'translateY(' + toY + 'px)';
+            return toY;
+        }
+        reback();
+        return currectY;
+    };
+
+    list.addEventListener('webkitTransitionEnd', reback);
+    function reback(){
+        if(listY > 0){
+            listY = 0;
+        }else if(listY < -scroll_max){
+            listY = -scroll_max;
+        }  
+        list.style.webkitTransitionDuration = '200ms';
+        list.style.webkitTransform = 'translateY(' + listY + 'px)';
+    };
+
+    //计算惯性
+    function momentum(dist, time, maxDist) {
+        var deceleration = 0.001,
+            speed = Math.abs(dist) / time,
+            newDist = (speed * speed) / (2 * deceleration),
+            newTime = 0;
+
+        if (Math.abs(newDist) > maxDist) {
+            newDist = maxDist;
+            speed = speed / 6;
+        }
+        newDist = newDist * (dist < 0 ? -1 : 1);
+        newTime = speed / deceleration;
+        return { 
+            'dist': newDist, 
+            'time': newTime 
+        };
+    };
+
+})();
+</script>
+</body>
+</html>
