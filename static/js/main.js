@@ -76,6 +76,7 @@ while(dragBoxNum_count < 6){
 		dragBoxNum_count++;
 	}
 }
+var temp;
 var drag = d3.behavior.drag()
 			.origin(function(){ 
 		        var t = d3.select(this);
@@ -86,9 +87,50 @@ var drag = d3.behavior.drag()
 			      .attr("x", d.x = Math.max(0, Math.min(width - 100, d3.event.x)))
 			      .attr("y", d.y = Math.max(0, Math.min(height - 100, d3.event.y)))
 			      .attr("id", "isdragging");
+
+			    // console.log(d3.event.sourceEvent);
+			    // this.beforeTimeStamp = d3.event.sourceEvent.timeStamp;
+			    this.beforeTimeStamp = new Date();
+			    this.distance = {
+			    	before : temp,
+			    	after : d3.event.x
+			    }
+			    temp = d3.event.x;
+			    // console.log(this.distance);
 			})
 			.on("dragend",function(d){
 		        var t = d3.select(this);
+		        var x = parseInt(d3.select(this).attr('x'));
+		        var distance = this.distance.after - this.distance.before;
+		        //console.log(distance);
+		        var time = new Date()-this.beforeTimeStamp;
+		        // console.log(time);
+		        //var speed = distance/time;
+		        var args = momentum(distance,time,0);
+		        console.log(x);
+		        console.log(args.distance);
+
+				t.transition()
+				.duration(1000)
+				.attr('x',x+parseInt(args.distance));	        
+				// copy form https://github.com/vastwu/Blog/issues/9
+				function momentum(distance, time, maxDist) {
+			        var deceleration = 0.01,
+			            speed = Math.abs(distance) / time,
+			            newDist = (speed * speed) / (2 * deceleration),
+			            newTime = 0;
+
+			        // if (Math.abs(newDist) > maxDist) {
+			        //     newDist = maxDist;
+			        //     speed = speed / 6;
+			        // }
+			        newDist = newDist * (distance < 0 ? -1 : 1);
+			        newTime = speed / deceleration;
+			        return { 
+			            'distance': newDist, 
+			            'time': newTime 
+			        };
+			    };
 				setTimeout(function(){t.attr("id","");},300);
 			});
 
