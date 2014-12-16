@@ -14,7 +14,22 @@
 	<script type='text/javascript' src='static/js/jquery.js'></script>
     <script type='text/javascript' src='static/js/d3.v3.js'></script>
     <script>
-        var dataset = [5,10,15,20,25,30];
+        var w = 800,
+            h = 600;  
+
+        var dataset = [[5, 20], [480, 90], [250, 50], [100, 33], [330, 95], [410, 12], [475, 44], [25, 67], [85, 21], [220, 88]];
+
+        var xScale = d3.scale.linear()
+                            .domain([0,d3.max(dataset,function(d){return d[0];})])
+                            .range([0,w]);
+        var yScale = d3.scale.linear()
+                            .domain([0,d3.max(dataset,function(d){return d[1];})])
+                            .range([0,h]);
+                                                
+
+      d3.max(dataset,function(d){
+        return d[0];
+      });
       d3.select('body')
         .selectAll('p')
         .data(dataset)
