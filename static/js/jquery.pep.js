@@ -78,7 +78,7 @@
   function Pep( el, options ) {
 
     this.name = pluginName;
-
+    console.log(this);
     // reference to our DOM object
     // and it's jQuery equivalent.
     this.el  = el;
