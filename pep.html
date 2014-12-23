@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+    <script type='text/javascript' src='static/js/jquery.js'></script>
+    <script type='text/javascript' src='static/js/jquery.pep.js'></script>
+	<script>
+	$(function(){
+		$('.pep').pep({
+			useCSSTranslation:false,
+			hardwareAccelerate:false,
+			// shouldEase:false
+			forceNonCSS3Movement:true
+		});
+	});
+	</script>
+	<style>
+	.pep{
+		width: 100px;
+		height: 100px;
+		border:1px solid #000;
+	}
+	</style>
+</head>
+<body>
+	<svg class="pep">
+		<rect class="drag-box" width="99" height="99" rx="5" ry="5" fill="#000"></rect>
+	</svg>
+</body>
+</html>
