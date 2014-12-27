@@ -62,86 +62,95 @@ function inOrNot(obj,arr){
 // https://github.com/briangonzalez/jquery.pep.js
 
 //
-var pep = Pep();
+var drag = d3.behavior
+	.drag()
+	.origin(function() {
+		var t = d3.select(this);
 
-function Pep(el,opt) {
-	console.log(this);
-	this.init();
-	return this;
-}	
+		return {
+			x: t.attr("x"),
+			y: t.attr("y")
+		};
+	})
+	.on("dragstart", function(d) {
+		// resetVelocityQueue()
+		this.velocityQueue = new Array(5);
+	})
+	.on("drag", function(d) {
+		d3.select(this)
+			.attr("x", d.x = Math.max(0, Math.min(width - 100, d3.event.x)))
+			.attr("y", d.y = Math.max(0, Math.min(height - 100, d3.event.y)))
+			.attr("id", "isdragging");
 
-  //
-  Pep.prototype.init = function () {
-	 	this.drag = d3.behavior.drag()
-					.origin(function(){ 
-			        	var t = d3.select(this);
-			        	return {x: t.attr("x"), y: t.attr("y")};
-			    	});
+		var t = this;
+		var timeStamp = d3.event.sourceEvent.timeStamp,
+			curX = d3.event.x,
+			curY = d3.event.y;
 
-		this.drag.on("drag",function(d){
-				d3.select(this)
-				      .attr("x", d.x = Math.max(0, Math.min(width - 100, d3.event.x)))
-				      .attr("y", d.y = Math.max(0, Math.min(height - 100, d3.event.y)))
-				      .attr("id", "isdragging");
-				});
+		addToLIFO({
+			time: timeStamp,
+			x: curX,
+			y: curY
+		});
+		//  addToLIFO();
+		//  a Last-In/First-Out array of the 5 most recent
+		//  velocity points, which is used for easing
+		function addToLIFO(val) {
+			// last in, first out
+			var arr = t.velocityQueue;
+			arr = arr.slice(1, arr.length);
+			arr.push(val);
+			t.velocityQueue = arr;
+		};
+	})
+	.on("dragend", function(d) {
+		var t = this,
+			x = parseInt(d3.select(this).attr('x')),
+			y = parseInt(d3.select(this).attr('y'));
 
-		this.drag.on("dragend",function(d){
-			        var t = d3.select(this),
-			        	x = parseInt(d3.select(this).attr('x')),
-			        	y = parseInt(d3.select(this).attr('y'));
+		//ease 
+		var vel = velocity(),
+			dt = t.dt,
+			x = vel.x,
+			y = vel.y;
 
+		var xOp = ( vel.x > 0 ) ? x + x : x - Math.abs(x);
+        var yOp = ( vel.y > 0 ) ? y + y : y - Math.abs(y);
 
-			        var time = new Date()-this.beforeTimeStamp;
+        console.log(xOp);
+		//  velocity();
+		//  using the LIFO, calculate velocity and return
+		//  velocity in each direction (x & y)
+		function velocity() {
+			var sumX = 0;
+			var sumY = 0;
+			var velocityMultiplier = 1.9;
 
-					t.transition()
-					.duration(args.time*1.5)
-					.ease("poly(2)")
-					.attr('x',x+parseInt(args.distanceX))
-					.attr('y',y+parseInt(args.distanceY));
+			for (var i = 0; i < t.velocityQueue.length - 1; i++) {
+				if (t.velocityQueue[i]) {
+					sumX += (t.velocityQueue[i + 1].x - t.velocityQueue[i].x);
+					sumY += (t.velocityQueue[i + 1].y - t.velocityQueue[i].y);
+					t.dt = (t.velocityQueue[i + 1].time - t.velocityQueue[i].time);
+				}
+			}
 
-					setTimeout(function(){t.attr("id","");},300);
-				});
-	}
+			// return velocity in each direction.
+			return {
+				x: sumX * velocityMultiplier,
+				y: sumY * velocityMultiplier
+			};
+		};
 
-  // resetVelocityQueue()
-  //
-  Pep.prototype.resetVelocityQueue = function() {
-    this.velocityQueue = new Array(5);
-  };	
+		d3.select(this).transition()
+			.duration(200)
+			.ease("poly(2)")
+			.attr('x', xOp)
+			.attr('y', yOp);
 
-  //  velocity();
-  //    using the LIFO, calculate velocity and return
-  //    velocity in each direction (x & y)
-  Pep.prototype.velocity = function(){
-    var sumX = 0;
-    var sumY = 0;
-
-    for ( var i = 0; i < this.velocityQueue.length -1; i++  ){
-      if ( this.velocityQueue[i] ){
-        sumX        += (this.velocityQueue[i+1].x - this.velocityQueue[i].x);
-        sumY        += (this.velocityQueue[i+1].y - this.velocityQueue[i].y);
-        this.dt     = ( this.velocityQueue[i+1].time - this.velocityQueue[i].time );
-      }
-    }
-
-    // return velocity in each direction.
-    return { x: sumX*this.options.velocityMultiplier, y: sumY*this.options.velocityMultiplier};
-  };
-
-  //  addToLIFO();
-  //    a Last-In/First-Out array of the 5 most recent
-  //    velocity points, which is used for easing
-  Pep.prototype.addToLIFO = function(val){
-    // last in, first out
-    var arr = this.velocityQueue;
-    arr = arr.slice(1, arr.length);
-    arr.push(val);
-    this.velocityQueue = arr;
-  };
-
-
-
-
+		// setTimeout(function() {
+		// 	d3.select(this).attr("id", "");
+		// }, 300);
+	});
 // MRC
 // drag box
 // use d3js

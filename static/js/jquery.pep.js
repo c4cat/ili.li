@@ -78,7 +78,7 @@
   function Pep( el, options ) {
 
     this.name = pluginName;
-    console.log(this);
+
     // reference to our DOM object
     // and it's jQuery equivalent.
     this.el  = el;
@@ -284,7 +284,6 @@
 
             // last in, first out (LIFO) queue to help us manage velocity
             this.addToLIFO( { time: ev.timeStamp, x: curX, y: curY } );
-
             // calculate values necessary to moving
             var dx, dy;
 
@@ -300,40 +299,6 @@
             this.dy   = dy;
             this.ev.x = curX;
             this.ev.y = curY;
-
-            // no movement in either direction -- so return
-            if (dx === 0 && dy === 0){
-              this.log({ type: 'event', event: '** stopped **' });
-              return;
-            }
-
-            // check if object has moved past X/Y thresholds
-            // if so, fire users start event
-            var initialDx  = Math.abs(this.startX - curX);
-            var initialDy  = Math.abs(this.startY - curY);
-            if ( !this.started && ( initialDx > this.options.startThreshold[0] || initialDy > this.options.startThreshold[1] ) ){
-              this.started = true;
-              this.$el.addClass('pep-start');
-              this.options.start.call(this, this.startEvent, this);
-            }
-
-            // Calculate our drop regions
-            if ( this.options.droppable ) {
-              this.calculateActiveDropRegions();
-            }
-
-            // fire user's drag event.
-            var continueDrag = this.options.drag.call(this, ev, this);
-
-            if ( continueDrag === false ) {
-              this.resetVelocityQueue();
-              return;
-            }
-
-            // log the move trigger & event position
-            this.log({ type: 'event', event: ev.type });
-            this.log({ type: 'event-coords', x: this.ev.x, y: this.ev.y });
-            this.log({ type: 'velocity' });
 
             this.doMoveTo(dx, dy);
   };
@@ -455,7 +420,6 @@
 
             var hash      = this.handleConstraint(x, y, true);
 
-            console.log(vel);
             // ✪  Apply the CSS3 animation easing magic  ✪
             if ( this.cssAnimationsSupported() )
               this.$el.css( this.getCSSEaseHash() );
@@ -476,9 +440,7 @@
             if (typeof this.options.moveTo === 'function') {
               this.options.moveTo.call(this, xOp, yOp);
             } else {
-              // this.moveTo(xOp, yOp, jsAnimateFallback);
-              console.log(xOp);
-              console.log(yOp);
+              this.moveTo(xOp, yOp, jsAnimateFallback);
             }
 
             // when the rest occurs, remove active class and call
@@ -496,11 +458,6 @@
               // call users rest event.
               if ( started || ( !started && $.inArray('rest', self.options.callIfNotStarted) > -1 ) ) {
                 self.options.rest.call(self, ev, self);
-              }
-
-              // revert thy self!
-              if ( self.options.revert && (self.options.revertAfter === 'ease' && self.options.shouldEase) && ( self.options.revertIf && self.options.revertIf.call(self) ) ) {
-                self.revert();
               }
 
               // remove active class
