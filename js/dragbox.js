@@ -17,83 +17,6 @@ while(dragBoxNum_count < 6){
 		dragBoxNum_count++;
 	}
 }
-var temp;
-var drag = d3.behavior.drag()
-			.origin(function(){ 
-		        var t = d3.select(this);
-		        return {x: t.attr("x"), y: t.attr("y")};
-		    })
-		    .on("dragstart",function(){
-		    	this.velocityQueue = new Array(5);
-		    })
-			.on("drag",function(d){
-				d3.select(this)
-			      .attr("x", d.x = Math.max(0, Math.min(width - 100, d3.event.x)))
-			      .attr("y", d.y = Math.max(0, Math.min(height - 100, d3.event.y)))
-			      .attr("id", "isdragging");
-
-			    // console.log(d3.event.sourceEvent);
-			    // this.beforeTimeStamp = d3.event.sourceEvent.timeStamp;
-			    this.beforeTimeStamp = new Date();
-			    this.distance = {
-			    	before : temp,
-			    	after : d3.event.x
-			    }
-			    temp = d3.event.x;
-			    // console.log(this.distance);
-
-			})
-			.on("dragend",function(d){
-		        var t = d3.select(this);
-		        var x = parseInt(d3.select(this).attr('x'));
-		        var distance = this.distance.after - this.distance.before;
-		        //console.log(distance);
-		        var time = new Date()-this.beforeTimeStamp;
-		        // console.log(time);
-		        //var speed = distance/time;
-		        var args = momentum(distance,time,0);
-		        console.log(x);
-		        console.log(args.distance);
-
-				t.transition()
-				.duration(args.time)
-				.attr('x',x+parseInt(args.distance));	        
-				// copy form https://github.com/vastwu/Blog/issues/9
-				function momentum(distance, time, maxDist) {
-			        var deceleration = 0.1,
-			            speed = Math.abs(distance) / time,
-			            newDist = (speed * speed) / (2 * deceleration),
-			            newTime = 0;
-
-			        // if (Math.abs(newDist) > maxDist) {
-			        //     newDist = maxDist;
-			        //     speed = speed / 6;
-			        // }
-			        newDist = newDist * (distance < 0 ? -1 : 1);
-			        newTime = speed / deceleration;
-			        return { 
-			            'distance': newDist, 
-			            'time': newTime 
-			        };
-			    };
-				setTimeout(function(){t.attr("id","");},300);
-			});
-
-d3.select('svg').append('g')
-	.attr({'width':width,'height':height,'x':0,'y':0})
-	.selectAll('rect')
-	.data(dragbox_arr)
-	.enter()
-	.append('rect')
-	.attr('class','drag-box')
-	.attr({'width':99,'height':99,'rx':5,'ry':5,'fill':'red'})
-	.attr('x',function(d,i){
-        return d[0]*100;
-    })
-    .attr('y',function(d,i){
-        return d[1]*100;
-    }).call(drag);
-
 
 d3.selectAll('.drag-box').on('click',function(){
 	if(d3.select(this).attr('id')=='isdragging') return false;
@@ -122,6 +45,21 @@ d3.selectAll('.drag-box').on('click',function(){
 	    });
 });
 
+
+d3.select('svg').append('g')
+	.attr({'width':width,'height':height,'x':0,'y':0})
+	.selectAll('rect')
+	.data(dragbox_arr)
+	.enter()
+	.append('rect')
+	.attr('class','drag-box')
+	.attr({'width':99,'height':99,'rx':5,'ry':5,'fill':'red'})
+	.attr('x',function(d,i){
+        return d[0]*100;
+    })
+    .attr('y',function(d,i){
+        return d[1]*100;
+    }).call(drag);
 
 function createAroundBox(num,edge,local){
 	var arr = [],

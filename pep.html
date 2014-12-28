@@ -6,26 +6,39 @@
     <script type='text/javascript' src='static/js/jquery.js'></script>
     <script type='text/javascript' src='static/js/jquery.pep.js'></script>
 	<script>
-	$(function(){
-		$('.pep').pep({
-			useCSSTranslation:false,
-			hardwareAccelerate:false,
-			// shouldEase:false
-			forceNonCSS3Movement:true
-		});
-	});
+
+var dragging = false
+
+$(function() {
+    var target = $('#target')
+    target.mousedown(function() {
+        dragging = true
+    })
+    $(document).mouseup(function() {
+        dragging = false
+    })
+    $(document).mousemove(function(e) {
+        if (dragging) {
+
+            var mouse_x = e.pageX;
+            var mouse_y = e.pageY;
+            var radians = Math.atan2(mouse_x - 10, mouse_y - 10) * 2;
+            var degree = (radians * (180 / Math.PI) * -1) + 120;
+            target.css('-webkit-transform', 'rotate(' + degree + 'deg)');
+            target.css('-webkit-transform-origin', '50% 50%');
+            target.css('top',mouse_y-50);
+            target.css('left',mouse_x-50);
+
+
+        }
+    })
+})
 	</script>
-	<style>
-	.pep{
-		width: 100px;
-		height: 100px;
-		border:1px solid #000;
-	}
-	</style>
+
 </head>
 <body>
-	<svg class="pep">
-		<rect class="drag-box" width="99" height="99" rx="5" ry="5" fill="#000"></rect>
-	</svg>
+
+<div style="position:absolute;height:100px;width:100px;background-color:orange;cursor:pointer;top:300px;left:800px;" id="target">abc</div>
+
 </body>
 </html>
