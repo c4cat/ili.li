@@ -18,6 +18,22 @@ while(dragBoxNum_count < 6){
 	}
 }
 
+d3.select('svg').append('g')
+	.attr({'width':width,'height':height,'x':0,'y':0})
+	.selectAll('rect')
+	.data(dragbox_arr)
+	.enter()
+	.append('rect')
+	.attr('class','drag-box')
+	.attr({'width':99,'height':99,'rx':5,'ry':5,'fill':'red'})
+	.attr('x',function(d,i){
+        return d[0]*100;
+    })
+    .attr('y',function(d,i){
+        return d[1]*100;
+    })
+    .call(drag);
+
 d3.selectAll('.drag-box').on('click',function(){
 	if(d3.select(this).attr('id')=='isdragging') return false;
 	var local = {
@@ -44,22 +60,6 @@ d3.selectAll('.drag-box').on('click',function(){
 	        return d[1]*100;
 	    });
 });
-
-
-d3.select('svg').append('g')
-	.attr({'width':width,'height':height,'x':0,'y':0})
-	.selectAll('rect')
-	.data(dragbox_arr)
-	.enter()
-	.append('rect')
-	.attr('class','drag-box')
-	.attr({'width':99,'height':99,'rx':5,'ry':5,'fill':'red'})
-	.attr('x',function(d,i){
-        return d[0]*100;
-    })
-    .attr('y',function(d,i){
-        return d[1]*100;
-    }).call(drag);
 
 function createAroundBox(num,edge,local){
 	var arr = [],

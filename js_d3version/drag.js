@@ -7,9 +7,6 @@ var drag = d3.behavior
 	.drag()
 	.origin(function() {
 		var t = d3.select(this);
-
-			console.log(t.attr("x")+','+t.attr("y"));
-
 		return {
 			x: t.attr("x"),
 			y: t.attr("y")
@@ -19,7 +16,7 @@ var drag = d3.behavior
 		// resetVelocityQueue()
 		this.velocityQueue = new Array(5);
 	})
-	.on("drag", function(d) {
+	.on("drag", function(d){
 		var t = this;
 		var timeStamp = d3.event.sourceEvent.timeStamp,
 			curX = d3.event.x,
@@ -65,16 +62,23 @@ var drag = d3.behavior
        		yOp = ( vel.y > 0 ) ? Math.abs(y/2) : y - Math.abs(y);
 
         //target x y      
-        var tx = Math.round((dx+xOp)/100)*100,
-        	ty = Math.round((dy+yOp)/100)*100;
+        var tx = Math.max(0, Math.min((Math.floor(width/100)-1)*100, Math.floor((dx+xOp)/100)*100)),
+        	ty = Math.max(0, Math.min((Math.floor(height/100)-1)*100, Math.floor((dy+yOp)/100)*100));
 
         d3.select(this).transition()
-			.duration(1000)
+			.duration(800)
 			.ease("elastic",1.2,99)
 			.attr('x', tx)
-			.attr('y', ty);
-
-		d3.select(this).attr("transform","rotate("+0+","+(tx+50)+","+(ty+50)+")");
+			.attr('y', ty)
+			.each("start",function(){
+				d3.select(this).attr('transform','rotate(0)');
+			})
+			.each("end",function(d){
+				d3.select(this)
+					.transition()
+					.duration(500)
+					.ease("elastic",1,0.6);
+			});
 
 		setTimeout(function() {
 			d3.select(t).attr("id", "");

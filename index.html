@@ -1,28 +1,47 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>Index</title>
+	<title>index</title>
 	<link rel="stylesheet" href="static/css/less.css">
+	<link rel="stylesheet" href="static/css/animate.css">
 </head>
-<style>
-    html{
-        /*background-image:url(./static/img/b2.jpg); */
-        background-size: cover;
-        overflow: hidden;
-    }
-    .bg-box{
-    }
-    .bg-box:hover{
-        fill:rgba(0,0,0,0.5);
-    }
-</style>
 <body>
-    <!-- end bg -->
-	<!-- <div id="container">sorry</div> -->
+	<!-- region -->
+	<div id="region"></div>
+	<!-- background -->
+	<div id="background">
+		<div id="bgNormal"></div>
+		<div id="bgSpecial"></div>
+		<div id="bgImage"><img src="" alt=""></div>
+	</div>
+	<!-- end background -->
+	<div id="around-container"></div>
+
+	<script type="text/template" id="dragbox-template">
+		<div id="<%= name %>" num="<%= id %>"><%= name %></div>
+	</script>
+	<script type="text/template" id="around-img-template">
+		<div class="around-img">
+			<a href="<%= img %>"><img src="<%= thumbnail %>" alt="<%= title %>" description="<%= description %>"></a>
+		</div>
+	</script>
+
+	<script type="text/template" id="around-template">
+		<div class="around-box">
+			<div class="around-img">
+				<a href="<%= img %>"><img src="<%= thumbnail %>" alt="" title=""></a>
+			</div>
+			<div class="around-tips">
+				<div class='num l'><%= id %></div>
+				<div class='type r'></div>
+				<div class='title'><p><%= name %></p></div>
+			</div>
+		</div>
+	</script>
 </body>
-    <script type='text/javascript' src='static/js/jquery.js'></script>
+	<script type='text/javascript' src='static/js/jquery.js'></script>
 	<script type='text/javascript' src='static/js/underscore.js'></script>
-    <script type='text/javascript' src='static/js/d3.v3.js'></script>
-    <script type='text/javascript' src='static/js/main.js'></script>
+	<script type='text/javascript' src='static/js/backbone.min.js'></script>
+	<script type='text/javascript' src='static/js/main.js'></script>
 </html>
