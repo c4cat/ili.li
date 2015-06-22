@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Demo</title>
+</head>
+<script type='text/javascript' src='static/js/jquery.js'></script>
+<script type='text/javascript' src='static/js/snap.svg-min.js'></script>
+<script type='text/javascript' src='static/js/createjs.min.js'></script>
+<script>
+function Wh(){
+	this.w = $(window).width();
+	this.h = $(window).height();
+}
+var wh = new Wh();
+var stageWidth = wh.w,
+	stageHeight = wh.h;
+
+var stage,square;
+
+function init(){
+	stage = new createjs.Stage(document.getElementById("demo"));
+	square = new createjs.Shape();
+	square.graphics.setStrokeStyle(1).beginStroke("#ff0000").rect(200,200,100,100);
+	square.regX = square.regY = 200;
+
+	stage.addChild(square);
+	
+	 createjs.Tween.get(square,{loop:false})
+	    .to({x:300, y:300 , rotation:45}, 1000, createjs.Ease.bounceIn).addEventListener("change", handleChange).call(finish,[this],this);
+        // .to({alpha: 0, y: 75}, 500, createjs.Ease.getPowInOut(2))
+        // .to({alpha: 0, y: 125}, 100)
+        // .to({alpha: 1, y: 100}, 500, createjs.Ease.getPowInOut(2))
+        // .to({x: 100}, 800, createjs.Ease.getPowInOut(2));
+
+	// createjs.Ticker.on("tick",tick);
+	createjs.Ticker.setFPS(60);
+	createjs.Ticker.addEventListener("tick", stage);
+	stage.update();
+}
+
+var x = 100;
+function tick(){
+	x = x+4;
+	square.x = x;
+	stage.update();
+}
+function finish(x){
+	console.log(x);
+}
+function handleChange(){
+	console.log(square);
+}
+
+	
+</script>
+<body onload="init();">
+	<canvas id="demo" width="1000" height="500">
+		if not support.
+	</canvas>
+</body>
+</html>

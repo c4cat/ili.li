@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Demo</title>
+</head>
+<script type='text/javascript' src='static/js/jquery.js'></script>
+<script type='text/javascript' src='static/js/snap.svg-min.js'></script>
+<body>
+	<svg id="svg" width="500" height="300"></svg>
+	<button id="button">click</button>
+</body>
+<script>
+var s = Snap("#svg");
+
+var square = s.paper.rect(50,50,50,50);
+	square.attr({
+		fill: "#bada55",
+	    stroke: "#000",
+	    strokeWidth: 1
+	});
+var square2 = s.paper.rect(150,50,50,50);
+	square2.attr({
+		fill: "#bada55",
+	    stroke: "#000",
+	    strokeWidth: 1
+	});			
+	// Snap.animate(50,180,function(val){
+	// 	square.attr({
+	// 		x:val
+	// 	});
+
+	// },1000,mina.easeinout);
+	var rot = 0;
+	document.getElementById("button").onclick = function() {
+		Snap.animate(rot, rot + 180, function(value) {
+			var m = new Snap.Matrix();
+	        rot = value;
+	        // 旋转
+	        console.log(rot);
+	        square.transform(new Snap.Matrix().rotate(value, 75, 75));
+	        m.translate(0,rot*10);
+	        square.transform(m);
+	    },500,mina.easeinout);
+	    Snap.animate(rot, rot + 180, function(value) {
+	        rot = value;
+	        // 旋转
+	        square2.transform(new Snap.Matrix().rotate(value, 175, 75));
+	        // square2.attr({x:300});
+	    },500,mina.easein);
+	}
+</script>
+</html>

@@ -60,7 +60,7 @@ module.exports=function(grunt){
                  tasks:['concat']
             },
             html:{
-                files:'*.html'
+                files:['*.html','./example/*.html']
             }
         }
 

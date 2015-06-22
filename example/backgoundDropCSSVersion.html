@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>backgroundDropCSSVersion</title>
+</head>
+<style>
+	html,body{
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+	}
+	*{
+		margin: 0;
+		padding: 0;
+	}
+	#c{
+		background: #000;
+		overflow: hidden;
+	}
+	div.box{
+		position: absolute;
+		/*margin-top:-1px;*/
+		/*margin-left:-1px;*/
+		width: 99px;
+		height: 99px;
+		border:1px solid #ccc;
+		background: #000;
+		border-radius:5px;
+		float: left;
+		background-image: url(../static/img/b2.jpg);
+		/*background-size: auto!important;*/
+		-webkit-transition:all 0.4s;
+		transition:all 0.4s;
+		transition-timing-function:cubic-bezier(1, 0.01, 1, 0.01);
+		-webkit-transition-timing-function:cubic-bezier(1, 0.01, 1, 0.01);
+	}
+</style>
+<body onmousewheel="return false;">
+	<div id="c"></div>
+</body>
+
+<script src="../static/js/jquery.min.js"></script>
+<script>
+//commin function
+function WH(){
+	this.w = $(window).width();
+	this.h = $(window).height();
+}
+function c(c){
+	console.log(c);
+}
+
+function init(){
+	var wh = new WH();
+	var boxSize = 100;
+	var width = wh.w,
+		height = wh.h;	
+
+	var rowNum =  Math.ceil(width/boxSize),
+		colNum =  Math.ceil(height/boxSize);
+
+	var containerWidth = rowNum * boxSize,
+		containerHeight = colNum * boxSize;
+
+	$('#c').css({'width':containerWidth,'height':containerHeight});
+	for(var i=0;i<rowNum;i++){
+		for(var j=0;j<colNum;j++){
+			$('#c').append('<div class="box" style="top:'+j*100+'px;left:'+i*100+'px;background-size:'+width+'px auto;background-position:'+i*-100+'px '+j*-100+'px"></div>');
+		}
+	}
+}
+
+init();
+
+function drop(){
+	$('.box').each(function(){
+		var deg = Math.random()*-180+90;
+		var delay = Math.random()*250;
+
+		$(this).css({
+			'transform':'translateY('+2000+'px) rotate('+deg+'deg)',
+			// 'opacity':'0',
+			'transitionDelay':delay+'ms'
+		});
+	});
+}
+
+$('body').click(function(){
+	drop();
+});
+
+</script>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<script type='text/javascript' src='static/js/jquery.js'></script>
+<style>
+	#c{
+		position: absolute;
+		top:200px;
+		left: 200px;
+	}
+	.box{
+		position: absolute;
+		width: 30px;
+		height: 15px;
+	}
+</style>
+<script>
+$(function(){
+	var count = 1;
+	var arr = [];
+
+	for(var y=-count;y<=count;++y){
+		for(var x=-count;x<=count;++x){
+			var c = {
+				x:x,
+				y:y,
+				v:spiral(x,y)
+			}
+			arr.push(c);
+		}
+		// $('#c').append('<br/>');
+	}
+
+	arr.sort(compare);
+	var tmp	= '';
+	arr.forEach(function(item,index,array){
+		$('#c').append('<div class="box" style="left:'+item.x*30+'px;top:'+item.y*15+'px;">'+item.v+'</div>');
+		if(tmp){
+			if(item.x-tmp.x>0){
+				alert('right');
+			}else if(item.x-tmp.x<0){
+				alert('left')
+			}else if(item.y-tmp.y>0){
+				alert('down')
+			}else{
+				alert('up')
+			}
+		}
+		tmp = item;
+	});
+
+	console.log(arr);
+
+	function compare(x1,x2){
+		return x1.v-x2.v;
+	}
+
+	function spiral(){
+		var c = Math.max(Math.abs(x),Math.abs(y));
+		var max = (c*2+1)*(c*2+1);
+
+		if (y == -c) { // 上边  
+            return max + (x + y);  
+        } else if (x == -c) {// 左边  
+            return max + (3 * x - y);  
+        } else if (y == c) {// 下边  
+            return max + (-x - 5 * y);  
+        } else {// 右边  
+            return max + (-7 * x + y);  
+        }
+	}
+
+	// function maxx(n1,n2){
+	// 	 return n1 > n2 ? n1 : n2;
+	// }
+
+	// function abs(x){
+	// 	return x > 0 ? x : -x;  
+	// }
+});	
+</script>
+<body>
+	<div id="c"></div>
+</body>
+</html>

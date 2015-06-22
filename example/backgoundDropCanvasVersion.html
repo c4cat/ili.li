@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>ili</title>
+</head>
+<style>
+	*{
+		padding: 0;
+		margin: 0;
+	}
+</style>
+<script type='text/javascript' src='static/js/jquery.js'></script>
+<script type='text/javascript' src='static/js/paper-full.min.js'></script>
+<script type='text/javascript' src='static/js/tween.js'></script>
+<script type='text/javascript' src='static/js/requestAnimationFrame.js'></script>
+<script type="text/paperscript" canvas="canvas">
+function c(a){
+	console.log(a);
+}
+
+// init
+
+
+var path = new Path.Rectangle(100,100,100,100);
+
+// create
+for(var i=0;i<10;i++){
+	for(var j=0;j<10;j++){
+			var path = new Path.Rectangle(100*i,100*j,100,100);
+			// instance.rotate(Math.random() * 360);
+			// instance.scale(0.25 + Math.random()*0.75);
+			path.style = {
+			    fillColor: 'black',
+			    strokeColor: '#fff',
+			    strokeWidth: 0
+			};
+			path.on('click', fall);
+	}
+}
+
+
+function fall(){
+	var start = 0,
+		during = 50,
+		end = 1000;
+
+	var items = project.getItems({class:Path});
+
+	view.on('frame',function(e){
+			start++; 
+
+			var tmpR = Tween.Cubic.easeOut(start, 0 , end-path.position.y, during);
+			var tmpY = Tween.Cubic.easeOut(start, path.position.y , end-path.position.y, during);
+
+			// if(start < during){
+			// 	path.position.y = tmpY;
+			// }
+			// if(start < 2){
+			// 	path.rotate(3);
+			// }
+
+			for (var i = 0; i < items.length; i++) {
+				var item = project.activeLayer.children[i];
+				start_tmp = start*Math.random();
+				var tmpY = Tween.Quart.easeInOut(start_tmp, item.position.y , end+200*Math.random()-item.position.y, during);
+				// Move the item 1/20th of its width to the right. This way
+				// larger circles move faster than smaller circles:
+				// item.position.y += tmpY
+				if(start<20) item.position.y += 0; 
+				
+				var sym = parseInt(Math.random()*10)%2 ==0 ? 1:-1;
+
+				item.rotate(sym*Math.random()/2);
+				item.scale(0.9977);
+				item.position.y = tmpY;
+			}
+			if(start> items.length) view.off('frame');
+	});
+}
+
+c(view);
+
+</script>
+<body>
+<canvas id="canvas" width="1000" height="600" resize></canvas>
+</body>
+</html>

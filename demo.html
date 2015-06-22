@@ -2,9 +2,171 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title></title>
+	<title>Demo</title>
 </head>
+<script type='text/javascript' src='static/js/jquery.js'></script>
+<script type='text/javascript' src='static/js/paper-full.min.js'></script>
+<script type='text/javascript' src='static/js/tween.js'></script>
+<script type='text/javascript' src='static/js/requestAnimationFrame.js'></script>
+<style>
+	canvas{
+		border:1px solid #000;
+	}
+</style>
+<script type="text/paperscript" canvas="canvas" resize> 
+
+function c(a){
+	console.log(a);
+}
+
+var imageObj = new Image();
+// var img = document.createElement("img");
+imageObj.src = "img.jpg";
+imageObj.id = "img";
+// document.body.appendChild(img);
+
+var raster = new paper.Raster(imageObj);
+
+
+var imgRect = new Rectangle({
+    point: [200, 200],
+    size: [100, 100]
+});
+
+
+
+imageObj.onload = function() {
+    // ctx.drawImage(imageObj, 100, 100);
+    var can = raster.getSubRaster(imgRect);
+    can.position.x = 500;
+    // document.body.appendChild(can);
+    // raster._context.
+    // console.log(can);
+};
+
+imageObj.src = 'img.jpg';
+
+
+img2 = document.createElement('img'); // use DOM HTMLImageElement
+img2.src = 'img.jpg';
+img2.alt = 'alt text';
+
+// document.body.appendChild(img2);
+
+var rect = new Rectangle({
+    point: [200, 200],
+    size: [100, 100]
+});
+
+// var cc = c.getContext('2d');
+// cc.fillStyle = "#FF0000";
+// document.body.appendChild(c);
+
+// var img = new paper.Raster({
+// 	source:,
+// 	position:paper.view.center
+// })
+
+// console.log(view);
+
+
+// var path = new Path.Rectangle(100,100,100,100);
+
+// for(var i=0;i<10;i++){
+// 	for(var j=0;j<10;j++){
+// 			var path = new Path.Rectangle(100*i,100*j,100,100);
+// 			// instance.rotate(Math.random() * 360);
+// 			// instance.scale(0.25 + Math.random()*0.75);
+// 			path.on('click', test2);
+// 	}
+// }
+
+var items = project.getItems({class:Path});
+
+function test2(){
+	view.on('frame',test);
+}
+// function test(){
+// 	// var start = 0, during = 100;
+// 	// // path.position.y = 10;
+// 	// console.log(path.position.y);
+// 	// var _run = function(){
+// 	// 	start++;
+// 	// 	// var the_y = Tween.Bounce.easeOut(start, path.position.y , 500-path.position.y, during);
+// 	// 	path.position.y += 1;
+// 	// 	// console.log(the_y);
+// 	// 	requestAnimationFrame(_run);
+// 	// }
+// 	// _run();
+// 	requestAnimationFrame(test);
+//     draw();
+// }
+
+var start = 0,
+	during = 50,
+	r_during = 10,
+	end=1000,
+	r_end = 1000;
+
+// console.log(path.rotate());
+var count = 49;
+
+function test(){
+// function onFrame(e){
+	start++; 
+
+	var tmpR = Tween.Cubic.easeOut(start, 0 , r_end-path.position.y, r_during);
+	var tmpY = Tween.Cubic.easeOut(start, path.position.y , end-path.position.y, during);
+
+	// if(start < during){
+	// 	path.position.y = tmpY;
+	// }
+	// if(start < 2){
+	// 	path.rotate(3);
+	// }
+	for (var i = 0; i < items.length; i++) {
+		var item = project.activeLayer.children[i];
+		start_tmp = start*Math.random();
+		var tmpY = Tween.Quart.easeInOut(start_tmp, item.position.y , end+200*Math.random()-item.position.y, during);
+		// Move the item 1/20th of its width to the right. This way
+		// larger circles move faster than smaller circles:
+		// item.position.y += tmpY
+		if(start<20) item.position.y += 0; 
+		
+		var sym = parseInt(Math.random()*10)%2 ==0 ? 1:-1;
+
+		item.rotate(sym*Math.random()/2);
+		item.scale(0.9977);
+		item.position.y = tmpY;
+	}
+
+	if(start> items.length) view.off('frame');
+// }
+}
+// var deg = 45,
+// 	cos = Math.cos(deg*Math.PI/180).toFixed(6),
+// 	sin = Math.sin(deg*Math.PI/180).toFixed(6);
+
+
+// var m = new Matrix(cos,sin,-sin,cos,0,0);
+
+// var m2 = new Matrix();
+// m2.rotate(120,150,150);
+// path.transform(m2);
+
+</script>
 <body>
-	<div draggable="true">123</div>
+<canvas id="canvas" width="1000" height="600"></canvas>
+<canvas id="canvas2" width="1000" height="600"></canvas>
 </body>
+<script>
+	var canvas = document.getElementById("canvas2");
+	var ctx = canvas.getContext("2d");
+	var imageObj = new Image();
+	imageObj.onload = function() {
+       ctx.drawImage(imageObj, 100, 100);
+    };
+    imageObj.src = 'img.jpg';
+    // console.log(ctx);
+</script>
 </html>
