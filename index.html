@@ -1,76 +1,100 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>ili.li</title>
+	<title>I AM ON CHAOS</title>
 </head>
 <style>
-	*{
-		padding: 0;
-		margin: 0;
-	}
-	body{
-		overflow: hidden;
-	}
-	#c{
-		width: 1280px;
-		position: relative;
-		margin: 0 auto;
-	}
-	.subBox{
-		transform-origin: 0px 0px 0px;
-	}
-</style>
-
-<body>
-<div id="c"><svg id="svg" width="1280" height="800"></svg>
-</body>
-<script type='text/javascript' src='static/js/jquery.js'></script>
-<script type='text/javascript' src='static/js/snap.svg-min.js'></script>
-<script type='text/javascript' src='static/js/tween.js'></script>
-<script type='text/javascript' src='static/js/requestAnimationFrame.js'></script>
-<script type='text/javascript' src='static/js/TweenMax.min.js'></script>
-<script type='text/javascript' src='static/js/SnapPlugin.js'></script>
-<script type='text/javascript' src='static/js/main.js'></script>
-<script>
-//init 
-function init(){
-	//3 center
-	var s3 = new Square();
-		s3.setX(center.x);
-		s3.setBgc('red');
-		s3.draw();
-	//2
-	var s2 = new Square();
-		s2.setX(center.x-offset*2);
-		s2.setBgc('green');
-		s2.draw();
-	//1
-	var s1 = new Square();
-		s1.setX(center.x-offset*4);
-		s1.setBgc('blue');
-		s1.draw();	
-	//4
-	var s4 = new Square();
-		s4.setX(center.x+offset*2);
-		s4.setBgc('black');
-		s4.draw();
-	//5	
-	var s5 = new Square();
-		s5.setX(center.x+offset*4);
-		s5.setBgc('orange');
-		s5.draw();
+/* dev branch*/
+*{
+    padding:0;
+    margin: 0;
 }
+html,
+body {
+    margin: 0;
+    overflow: hidden;
+    height: 100%;
+}
+canvas[resize] {
+    width: 100%;
+    height: 100%;
+}
+</style>
+<script type='text/javascript' src='./static/js/paper-full.min.js'></script>
+    <script type="text/paperscript" canvas="canvas">
+        var width, height, center;
+        var points = 200;
+        var smooth = true;
+        var radius = 60;
+        var path = new Path({
+            // fillColor: 'black'
+            strokeWidth:0.5,
+            strokeColor:'#000'
+        });
 
-// init();
-// s.animate();
-// path.animate({d:"M10 100L90 360M90 360L170 100"}, 1000, mina.easeInOut)
+        // var c = new Path.Circle(new Point(view.center.x, view.center.y), radius);
+        // c.strokeColor = 'black';
 
-// Snap.animate(0, 20, function (val) {
-//         path.attr({
-//             x: val
-//         });
-//     }, 1000);
+        initializePath();
 
-</script>
+        function rd(m,n){
+            var c = n-m+1;  
+            return Math.random()*c+m;
+        }
+
+        function initializePath() {
+            center = view.center;
+            width = view.size.width;
+            height = view.size.height / 2;
+            path.segments = [];
+            // path.add(view.bounds.bottomLeft);
+            for (var i = 0; i < points; i++) {
+                var point = theCordAfterCricleLimit();
+                if(point){
+                    path.add(point);
+                }
+            }
+            path.smooth();
+        }
+
+        function theCordAfterCricleLimit(){
+            var rdx = rd(center.x-radius,center.x+radius),
+                rdy = rd(center.y-radius,center.y+radius);
+
+            var xLength = Math.abs(rdx - center.x),
+                yLength = Math.abs(rdy - center.y);
+
+            var lengthFormOrigin =  Math.sqrt((xLength*xLength)+(yLength*yLength));
+            console.log(lengthFormOrigin);
+            if( lengthFormOrigin > radius){
+                return '';
+            }
+            var point = new Point(rdx, rdy);
+            return point;
+        }
+
+        function onFrame(event) {
+            if(event.count%3 == 0){
+                path.segments = [];
+                for (var i = 0; i < points; i++) {
+                    var point = theCordAfterCricleLimit();
+                    if(point){
+                        path.add(point);
+                    }
+                }
+                if(smooth){
+                    path.smooth();
+                }
+            }
+        }
+
+        // Reposition the path whenever the window is resized:
+        function onResize(event) {
+            initializePath();
+        }
+    </script>
+<body>
+	<canvas id="canvas" resize></canvas>
+</body>
 </html>
