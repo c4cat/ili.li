@@ -2,6 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 	<title>I AM ON CHAOS</title>
 </head>
 <style>
@@ -24,19 +25,51 @@ canvas[resize] {
 <script type='text/javascript' src='./static/js/paper-full.min.js'></script>
     <script type="text/paperscript" canvas="canvas">
         var width, height, center;
-        var points = 200;
+        var points = 900;
         var smooth = true;
-        var radius = 60;
+        var radius = 300;
+        var speed = 4;
         var path = new Path({
             // fillColor: 'black'
-            strokeWidth:0.5,
+            strokeWidth:1,
             strokeColor:'#000'
         });
 
+
+        // path.onMouseMove = function(e){
+        //     this.scale(2);
+        // }
+
+        var s = new Shape.Rectangle({
+            point: [view.size.width/2, 0],
+            size: [view.size.width/2, view.size.height],
+            strokeColor: 'black',
+            fillColor: '#000' 
+        });
+        s.blendMode = 'xor';
+
+
+
         // var c = new Path.Circle(new Point(view.center.x, view.center.y), radius);
-        // c.strokeColor = 'black';
+        // c.fillColor = '#333';
+        // c.blendMode = 'xor';
+
+        var r = new Raster('./2.pic.jpg',[view.center.x, view.center.y]);
+
+        r.blendMode = 'source-in';
+
+        // r.onLoad = function(){
+
+
+        // }
+
+
+
 
         initializePath();
+
+        var g = new Group(path,r);
+        // g.clipped = true;
 
         function rd(m,n){
             var c = n-m+1;  
@@ -66,7 +99,6 @@ canvas[resize] {
                 yLength = Math.abs(rdy - center.y);
 
             var lengthFormOrigin =  Math.sqrt((xLength*xLength)+(yLength*yLength));
-            console.log(lengthFormOrigin);
             if( lengthFormOrigin > radius){
                 return '';
             }
@@ -75,18 +107,21 @@ canvas[resize] {
         }
 
         function onFrame(event) {
-            if(event.count%3 == 0){
-                path.segments = [];
-                for (var i = 0; i < points; i++) {
-                    var point = theCordAfterCricleLimit();
-                    if(point){
-                        path.add(point);
-                    }
-                }
-                if(smooth){
-                    path.smooth();
-                }
-            }
+            // if(event.count%speed == 0){
+            //     path.segments = [];
+            //     for (var i = 0; i < points; i++) {
+            //         var point = theCordAfterCricleLimit();
+            //         if(point){
+            //             path.add(point);
+            //         }
+            //     }
+            //     if(smooth){
+            //         path.smooth();
+            //     }
+            // }
+            // if(event.count%3 == 0){
+            //     path.scale(0.95);
+            // }
         }
 
         // Reposition the path whenever the window is resized:
