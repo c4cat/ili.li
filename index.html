@@ -29,7 +29,7 @@ canvas[resize] {
         var points = 1000;
         var smooth = true;
         var radius = 280;
-        var speed = 4;
+        var speed = 1;
         var ani = false;
         var path = new Path({
             // fillColor: 'black'
@@ -62,44 +62,9 @@ canvas[resize] {
             // Set the content of the textMRC item:
             textMRC.content = 'MRC';
             textMRC.fontSize = 144;
-            textMRC.position = new Point(view.center.x, view.center.y-50);
+            textMRC.position = new Point(view.center.x, view.center.y);
             textMRC.fontWeight = 900;
-            textMRC.strokeColor = '#eee';
             textMRC.strokeWidth = '2';
-            textMRC.shadowColor = new Color(0, 0, 0, 0.8);
-            textMRC.shadowBlur = 15;
-            textMRC.shadowOffset = new Point(5, 0);
-
-            var rr = new Path.Rectangle({
-                point: new Point(view.center.x-160, view.center.y-5),
-                size: [320, 4],
-                fillColor: '#fff'
-            })
-            rr.shadowColor = new Color(0, 0, 0);
-            rr.shadowBlur = 12;
-            rr.shadowOffset = new Point(5, 5);
-
-            var textCorder = new PointText(new Point(30, 30));
-            textCorder.fillColor = '#fff';
-            // Set the content of the textCorder item:
-            textCorder.content = 'A CODER & DESIGNER';
-            textCorder.fontSize = 30;
-            textCorder.position = new Point(view.center.x, view.center.y+20);
-            textCorder.fontWeight = 900;
-            textCorder.shadowColor = new Color(0, 0, 0);
-            textCorder.shadowBlur = 12;
-            textCorder.shadowOffset = new Point(5, 5);
-
-            var rrr = new Path.Rectangle({
-                point: new Point(view.center.x-10, view.center.y+10),
-                size: [170, 4],
-                fillColor: 'red' 
-            });
-            var rrrr = new Path.Rectangle({
-                point: new Point(view.center.x-10, view.center.y+20),
-                size: [170, 4],
-                fillColor: 'red' 
-            });
         }
 
 
